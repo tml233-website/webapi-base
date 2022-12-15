@@ -8,6 +8,10 @@ import asyncHandler from "express-async-handler";
 
 export class Application {
     private app: express.Application;
+    protected get App(){
+        return this.app;
+    }
+    
     private endpointConfig: EndpointConfig;
 
     constructor(globalConfig: EndpointConfig) {
