@@ -11,6 +11,9 @@ const https_1 = __importDefault(require("https"));
 const ApiEntry_1 = require("./ApiEntry");
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 class Application {
+    get App() {
+        return this.app;
+    }
     constructor(globalConfig) {
         this.endpointConfig = globalConfig;
         this.app = (0, express_1.default)();
