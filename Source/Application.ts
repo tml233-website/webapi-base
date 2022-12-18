@@ -1,53 +1,34 @@
 import express from "express";
-import cors from "cors";
 import fs from "fs";
 import https from "https";
 import { EndpointConfig } from "./Config";
-import { ApiEntry, HttpMethod } from "./ApiEntry";
-import asyncHandler from "express-async-handler";
+import { AddRoute, DefaultRouteHandler, HttpMethod, RouteHandler } from "./Route";
+import RouteEntry from "./RouteEntry";
+import Router from "./Router";
 
-export class Application {
-    private app: express.Application;
-    protected get App(){
+export default class Application {
+    private readonly app: express.Application;
+    protected get App() {
         return this.app;
     }
-    
-    private endpointConfig: EndpointConfig;
+
+    private readonly endpointConfig: EndpointConfig;
 
     constructor(globalConfig: EndpointConfig) {
         this.endpointConfig = globalConfig;
-
         this.app = express();
-        this.app.use(cors());
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: false }));
     }
 
-    public AddApiEntry(entry: ApiEntry) {
-        if (!entry.Handler) {
-            throw new Error("ApiEntry does not have a handler!");
-        }
-
-        switch (entry.Method) {
-            case HttpMethod.Get:
-                this.app.get(entry.Path, asyncHandler(entry.Handler));
-                break;
-            case HttpMethod.Post:
-                this.app.post(entry.Path, asyncHandler(entry.Handler));
-                break;
-            case HttpMethod.Put:
-                this.app.put(entry.Path, asyncHandler(entry.Handler));
-                break;
-            case HttpMethod.Delete:
-                this.app.delete(entry.Path, asyncHandler(entry.Handler));
-                break;
-            case HttpMethod.Patch:
-                this.app.patch(entry.Path, asyncHandler(entry.Handler));
-                break;
-            default:
-                throw new Error("Unknown HttpMethod!");
-        }
+    public AddRouter(router: Router) {
+        this.App.use(router.Path, router.Router);
     }
+    public AddRoute(method: HttpMethod, path: string, handler: RouteHandler = DefaultRouteHandler) {
+        AddRoute(this.App, method, path, handler);
+    }
+    public AddRouteEntry(entry: RouteEntry) {
+        this.AddRoute(entry.Method, entry.Path, entry.Handler);
+    }
+    
 
     Run() {
         let listenCallback = () => {
