@@ -1,7 +1,7 @@
 import Application from "./Application";
 
 import Module from "./Modules/Module";
-import RouteModule from "./Modules/RouterModule";
+import RouterModule from "./Modules/RouterModule";
 
 import AsyncHandler from "express-async-handler";
 
@@ -12,7 +12,7 @@ export {
     Application,
 
     Module,
-    RouteModule,
+    RouterModule,
 
     AsyncHandler,
 
