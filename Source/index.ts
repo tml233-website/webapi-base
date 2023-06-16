@@ -1,23 +1,20 @@
 import Application from "./Application";
 
-import { HttpMethod, RouteHandler, DefaultRouteHandler } from "./Route";
+import Module from "./Modules/Module";
+import RouteModule from "./Modules/RouterModule";
 
-import Router from "./Router";
-import RouteEntry from "./RouteEntry";
+import AsyncHandler from "express-async-handler";
 
 import { EndpointConfig, KeysConfig } from "./Config";
-
 
 
 export {
     Application,
 
-    HttpMethod,
-    RouteHandler,
-    DefaultRouteHandler,
+    Module,
+    RouteModule,
 
-    Router,
-    RouteEntry,
+    AsyncHandler,
 
     EndpointConfig,
     KeysConfig

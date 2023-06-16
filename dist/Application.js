@@ -6,23 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const fs_1 = __importDefault(require("fs"));
 const https_1 = __importDefault(require("https"));
-const Route_1 = require("./Route");
 class Application {
     get App() {
         return this.app;
     }
     constructor(globalConfig) {
-        this.endpointConfig = globalConfig;
         this.app = (0, express_1.default)();
+        this.endpointConfig = globalConfig;
     }
-    AddRouter(router) {
-        this.App.use(router.Path, router.Router);
-    }
-    AddRoute(method, path, handler = Route_1.DefaultRouteHandler) {
-        (0, Route_1.AddRoute)(this.App, method, path, handler);
-    }
-    AddRouteEntry(entry) {
-        this.AddRoute(entry.Method, entry.Path, entry.Handler);
+    AddModule(module) {
+        module.ApplyTo(this.App);
     }
     Run() {
         let listenCallback = () => {

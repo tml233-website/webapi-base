@@ -4,14 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const Route_1 = require("./Route");
-class Router {
+const Module_1 = __importDefault(require("./Module"));
+class RouterModule extends Module_1.default {
+    constructor() {
+        super(...arguments);
+        this.router = express_1.default.Router();
+        this.path = "";
+    }
     get Router() {
         return this.router;
-    }
-    constructor() {
-        this.path = "";
-        this.router = express_1.default.Router();
     }
     set Path(path) {
         this.path = path;
@@ -19,14 +20,11 @@ class Router {
     get Path() {
         return this.path;
     }
-    AddRouter(router) {
-        this.Router.use(router.Path, router.Router);
+    ApplyTo(router) {
+        router.use(this.Path, this.Router);
     }
-    AddRoute(method, path, handler = Route_1.DefaultRouteHandler) {
-        (0, Route_1.AddRoute)(this.Router, method, path, handler);
-    }
-    AddRouteEntry(entry) {
-        this.AddRoute(entry.Method, entry.Path, entry.Handler);
+    AddModule(module) {
+        module.ApplyTo(this.Router);
     }
 }
-exports.default = Router;
+exports.default = RouterModule;

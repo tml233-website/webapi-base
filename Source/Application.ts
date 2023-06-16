@@ -2,35 +2,25 @@ import express from "express";
 import fs from "fs";
 import https from "https";
 import { EndpointConfig } from "./Config";
-import { AddRoute, DefaultRouteHandler, HttpMethod, RouteHandler } from "./Route";
-import RouteEntry from "./RouteEntry";
-import Router from "./Router";
+import Module from "./Modules/Module";
 
 export default class Application {
-    private readonly app: express.Application;
+    private readonly app: express.Application = express();
     protected get App() {
         return this.app;
     }
 
     private readonly endpointConfig: EndpointConfig;
 
-    constructor(globalConfig: EndpointConfig) {
+    public constructor(globalConfig: EndpointConfig) {
         this.endpointConfig = globalConfig;
-        this.app = express();
     }
 
-    public AddRouter(router: Router) {
-        this.App.use(router.Path, router.Router);
+    protected AddModule(module: Module): void {
+        module.ApplyTo(this.App);
     }
-    public AddRoute(method: HttpMethod, path: string, handler: RouteHandler = DefaultRouteHandler) {
-        AddRoute(this.App, method, path, handler);
-    }
-    public AddRouteEntry(entry: RouteEntry) {
-        this.AddRoute(entry.Method, entry.Path, entry.Handler);
-    }
-    
 
-    Run() {
+    public Run() {
         let listenCallback = () => {
             console.log("Server started. Listening port " + this.endpointConfig.port);
         };
